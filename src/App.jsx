@@ -3,29 +3,20 @@ import "./App.css";
 import { FaTrash } from "react-icons/fa";
 
 function App() {
-    const [notes, setNotes] = useState([]);
-    const [newNote, setNewNote] = useState("");
-
-    // Retrieve notes from localStorage on component mount
-    useEffect(() => {
+    // Initialize notes from localStorage or an empty array if no notes exist
+    const [notes, setNotes] = useState(() => {
         const storedNotes = localStorage.getItem("notes");
-        if (storedNotes) {
-            try {
-                setNotes(JSON.parse(storedNotes));
-            } catch (error) {
-                console.error("Failed to parse notes from localStorage", error);
-            }
-        }
-    }, []);
+        return storedNotes ? JSON.parse(storedNotes) : [];
+    });
+
+    const [newNote, setNewNote] = useState("");
 
     // Store notes in localStorage whenever they change
     useEffect(() => {
-        if (notes.length) {
-            try {
-                localStorage.setItem("notes", JSON.stringify(notes));
-            } catch (error) {
-                console.error("Failed to save notes to localStorage", error);
-            }
+        try {
+            localStorage.setItem("notes", JSON.stringify(notes));
+        } catch (error) {
+            console.error("Failed to save notes to localStorage", error);
         }
     }, [notes]);
 
